@@ -1,0 +1,40 @@
+@page
+@model EnergySportsClub.Areas.Admin.Pages.Managers.IndexModel
+@{
+    ViewData["Title"] = "Manage Managers";
+    Layout = "_AdminLayout";
+}
+
+<h1>Manage Managers</h1>
+
+<p>
+    <a class="btn btn-primary" asp-page="Create">Add Manager</a>
+</p>
+
+<table class="table table-striped mt-4">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var manager in Model.Managers)
+    {
+        <tr>
+            <td>@manager.Email</td>
+            <td>@manager.Name</td>
+            <td>@manager.Surname</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary" asp-page="Edit" asp-route-id="@manager.Id">Edit</a>
+                <form method="post" asp-page-handler="Remove" asp-route-userId="@manager.Id" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+

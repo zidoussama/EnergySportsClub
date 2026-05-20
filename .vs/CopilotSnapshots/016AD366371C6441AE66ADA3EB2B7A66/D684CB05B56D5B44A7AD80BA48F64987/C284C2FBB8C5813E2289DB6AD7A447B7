@@ -1,0 +1,18 @@
+﻿namespace EnergySportsClub.Models
+{
+    public class Material
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public enum status
+        {
+            Available,
+            Unavailable
+        }
+        public status MaterialStatus { get; set; }
+        public int QteStock { get; set; }
+
+        public float pricePerHour { get; set; }
+    }
+}

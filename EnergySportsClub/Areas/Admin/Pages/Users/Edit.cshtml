@@ -1,0 +1,42 @@
+@page "{id}"
+@model EnergySportsClub.Areas.Admin.Pages.Users.EditModel
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "_AdminLayout";
+}
+
+<h1>Edit User</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Input.UserId" />
+    <div class="mb-3">
+        <label asp-for="Input.Email" class="form-label"></label>
+        <input asp-for="Input.Email" class="form-control" readonly />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Name" class="form-label"></label>
+        <input asp-for="Input.Name" class="form-control" />
+        <span asp-validation-for="Input.Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Surname" class="form-label"></label>
+        <input asp-for="Input.Surname" class="form-control" />
+        <span asp-validation-for="Input.Surname" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Age" class="form-label"></label>
+        <input asp-for="Input.Age" class="form-control" />
+        <span asp-validation-for="Input.Age" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Input.Gender" class="form-label"></label>
+        <input asp-for="Input.Gender" class="form-control" />
+        <span asp-validation-for="Input.Gender" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" asp-page="Index">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

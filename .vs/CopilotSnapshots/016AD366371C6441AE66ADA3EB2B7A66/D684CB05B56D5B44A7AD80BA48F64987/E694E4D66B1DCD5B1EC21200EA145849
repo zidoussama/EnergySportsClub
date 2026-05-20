@@ -1,0 +1,19 @@
+﻿namespace EnergySportsClub.Models
+{
+    public class terrain
+    {
+        public int Id { get; set; }
+        public string type { get; set; }
+
+        public string dimensions { get; set; }
+        public enum status
+        {
+            Available,
+            Unavailable
+        }
+        public status TerrainStatus { get; set; }
+        public decimal PricePerHour { get; set; }
+
+        public ICollection<Reservationterrain> Reservationterrains { get; set; } = new List<Reservationterrain>();
+    }
+}

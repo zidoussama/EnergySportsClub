@@ -1,0 +1,14 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace EnergySportsClub.Models
+{
+    public class TerrainMaterial
+    {
+        public int Id { get; set; }
+        [ValidateNever]
+        public Terrain Terrain { get; set; } 
+
+        [ValidateNever]
+        public Material Material { get; set; }
+    }
+}

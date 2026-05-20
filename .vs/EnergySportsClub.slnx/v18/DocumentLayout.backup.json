@@ -1,0 +1,274 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\controllers\\materialscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\controllers\\materialscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\models\\material.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\models\\material.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\views\\materials\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\views\\materials\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\views\\materials\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\views\\materials\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\areas\\admin\\pages\\managers\\create.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\areas\\admin\\pages\\managers\\create.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\areas\\admin\\pages\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\areas\\admin\\pages\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\areas\\admin\\pages\\users\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\areas\\admin\\pages\\users\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\areas\\admin\\pages\\managers\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\areas\\admin\\pages\\managers\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\views\\materials\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\views\\materials\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\views\\shared\\_managerlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\views\\shared\\_managerlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\areas\\admin\\controllers\\materialscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\areas\\admin\\controllers\\materialscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|d:\\education\\2gl\\csharp\\energysportsclub\\energysportsclub\\areas\\identity\\pages\\account\\login.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFB840A6-0963-8768-CDB9-9D1ECFE6DCB9}|EnergySportsClub\\EnergySportsClub.csproj|solutionrelative:energysportsclub\\areas\\identity\\pages\\account\\login.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Login.cshtml.cs",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Identity\\Pages\\Account\\Login.cshtml.cs",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Areas\\Identity\\Pages\\Account\\Login.cshtml.cs",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Identity\\Pages\\Account\\Login.cshtml.cs",
+              "RelativeToolTip": "EnergySportsClub\\Areas\\Identity\\Pages\\Account\\Login.cshtml.cs",
+              "ViewState": "AgIAAHwAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T19:45:27.155Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Program.cs",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Program.cs",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Program.cs",
+              "RelativeToolTip": "EnergySportsClub\\Program.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAABRwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T19:41:15.969Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "EnergySportsClub\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAABQAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-20T19:21:34.923Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "_ManagerLayout.cshtml",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Shared\\_ManagerLayout.cshtml",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Views\\Shared\\_ManagerLayout.cshtml",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Shared\\_ManagerLayout.cshtml",
+              "RelativeToolTip": "EnergySportsClub\\Views\\Shared\\_ManagerLayout.cshtml",
+              "ViewState": "AgIAABkAAAAAAAAAAABRwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-20T19:21:28.319Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Materials\\Index.cshtml",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Views\\Materials\\Index.cshtml",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Materials\\Index.cshtml",
+              "RelativeToolTip": "EnergySportsClub\\Views\\Materials\\Index.cshtml",
+              "ViewState": "AgIAAAsAAAAAAAAAAABRwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-20T19:21:22.286Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MaterialsController.cs",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Controllers\\MaterialsController.cs",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Controllers\\MaterialsController.cs",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Controllers\\MaterialsController.cs",
+              "RelativeToolTip": "EnergySportsClub\\Controllers\\MaterialsController.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAvwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T19:21:15.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "MaterialsController.cs",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Controllers\\MaterialsController.cs",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Areas\\Admin\\Controllers\\MaterialsController.cs",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Controllers\\MaterialsController.cs",
+              "RelativeToolTip": "EnergySportsClub\\Areas\\Admin\\Controllers\\MaterialsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-20T19:41:44.353Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Materials\\Edit.cshtml",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Views\\Materials\\Edit.cshtml",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Materials\\Edit.cshtml",
+              "RelativeToolTip": "EnergySportsClub\\Views\\Materials\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-22T13:58:09.304Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Materials\\Create.cshtml",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Views\\Materials\\Create.cshtml",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Materials\\Create.cshtml",
+              "RelativeToolTip": "EnergySportsClub\\Views\\Materials\\Create.cshtml",
+              "ViewState": "AgIAABAAAAAAAAAAAAAiwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-22T13:57:46.468Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Material.cs",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Models\\Material.cs",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Models\\Material.cs",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Models\\Material.cs",
+              "RelativeToolTip": "EnergySportsClub\\Models\\Material.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAYwA0AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T13:53:24.564Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "_AdminLayout.cshtml",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Shared\\_AdminLayout.cshtml",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Views\\Shared\\_AdminLayout.cshtml",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Views\\Shared\\_AdminLayout.cshtml",
+              "RelativeToolTip": "EnergySportsClub\\Views\\Shared\\_AdminLayout.cshtml",
+              "ViewState": "AgIAAB0AAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-22T13:42:04.9Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Pages\\Managers\\Create.cshtml",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Areas\\Admin\\Pages\\Managers\\Create.cshtml",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Pages\\Managers\\Create.cshtml",
+              "RelativeToolTip": "EnergySportsClub\\Areas\\Admin\\Pages\\Managers\\Create.cshtml",
+              "ViewState": "AgIAAAkAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-22T13:09:30.303Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Create.cshtml.cs",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Pages\\Managers\\Create.cshtml.cs",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Areas\\Admin\\Pages\\Managers\\Create.cshtml.cs",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Pages\\Managers\\Create.cshtml.cs",
+              "RelativeToolTip": "EnergySportsClub\\Areas\\Admin\\Pages\\Managers\\Create.cshtml.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAA+wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T13:09:25.324Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Index.cshtml.cs",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Pages\\Users\\Index.cshtml.cs",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Areas\\Admin\\Pages\\Users\\Index.cshtml.cs",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Pages\\Users\\Index.cshtml.cs",
+              "RelativeToolTip": "EnergySportsClub\\Areas\\Admin\\Pages\\Users\\Index.cshtml.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAkwGUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-22T13:09:02.911Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Pages\\Users\\Index.cshtml",
+              "RelativeDocumentMoniker": "EnergySportsClub\\Areas\\Admin\\Pages\\Users\\Index.cshtml",
+              "ToolTip": "D:\\education\\2GL\\cSharp\\EnergySportsClub\\EnergySportsClub\\Areas\\Admin\\Pages\\Users\\Index.cshtml",
+              "RelativeToolTip": "EnergySportsClub\\Areas\\Admin\\Pages\\Users\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-22T13:08:48.992Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

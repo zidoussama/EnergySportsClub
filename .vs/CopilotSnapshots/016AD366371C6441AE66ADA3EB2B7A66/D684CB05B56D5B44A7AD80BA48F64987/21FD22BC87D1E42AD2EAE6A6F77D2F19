@@ -1,0 +1,19 @@
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace EnergySportsClub.Models
+{
+    public class Reservationterrain
+    {
+        public int Id { get; set; }
+        public DateTime ReservationDate { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+
+
+        [ValidateNever]
+        public User User { get; set; }
+
+        [ValidateNever]
+        public terrain Terrain { get; set; }
+    }
+}

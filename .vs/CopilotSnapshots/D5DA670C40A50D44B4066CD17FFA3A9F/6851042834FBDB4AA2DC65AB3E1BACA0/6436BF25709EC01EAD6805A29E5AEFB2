@@ -1,0 +1,30 @@
+﻿@page
+@model EnergySportsClub.Areas.Admin.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "All Users";
+    Layout = "_AdminLayout";
+}
+
+<h1>All Users</h1>
+
+<table class="table table-striped mt-4">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Roles</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model.Users)
+    {
+        <tr>
+            <td>@user.Email</td>
+            <td>@user.Name</td>
+            <td>@user.Surname</td>
+            <td>@string.Join(", ", user.Roles)</td>
+        </tr>
+    }
+    </tbody>
+</table>
