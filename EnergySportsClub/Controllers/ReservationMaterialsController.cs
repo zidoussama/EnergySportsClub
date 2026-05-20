@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +15,12 @@ namespace EnergySportsClub.Controllers
     public class ReservationMaterialsController : Controller
     {
         private readonly DbcontextTest _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReservationMaterialsController(DbcontextTest context)
+        public ReservationMaterialsController(DbcontextTest context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ReservationMaterials
@@ -47,11 +51,23 @@ namespace EnergySportsClub.Controllers
         }
 
         // GET: ReservationMaterials/Create
-        public IActionResult Create()
+        [Authorize(Roles = "User")]
+        public IActionResult Create(int? materialId)
         {
-            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            var materialItems = _context.Materials
+                .Select(material => new SelectListItem
+                {
+                    Value = material.Id.ToString(),
+                    Text = $"{material.Name} ({material.MaterialStatus}, Stock: {material.QteStock})"
+                })
+                .ToList();
+            ViewData["MaterialId"] = new SelectList(materialItems, "Value", "Text", materialId?.ToString());
+            var model = new ReservationMaterial
+            {
+                MaterialId = materialId ?? 0,
+                ReservationDate = DateTime.Today
+            };
+            return View(model);
         }
 
         // POST: ReservationMaterials/Create
@@ -59,16 +75,40 @@ namespace EnergySportsClub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ReservationDate,StartTime,EndTime,ReturnTime,MaterialId,UserId")] ReservationMaterial reservationMaterial)
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> Create([Bind("Id,ReservationDate,StartTime,EndTime,ReturnTime,MaterialId")] ReservationMaterial reservationMaterial)
         {
+            reservationMaterial.UserId = _userManager.GetUserId(User) ?? string.Empty;
+            ModelState.Remove(nameof(ReservationMaterial.UserId));
+
             if (ModelState.IsValid)
             {
+                var reservationDate = reservationMaterial.ReservationDate.Date;
+                var hasOverlap = await _context.ReservationMaterials
+                    .AnyAsync(reservation => reservation.MaterialId == reservationMaterial.MaterialId
+                        && reservation.ReservationDate.Date == reservationDate
+                        && reservationMaterial.StartTime < reservation.ReturnTime
+                        && reservationMaterial.ReturnTime > reservation.StartTime);
+
+                if (hasOverlap)
+                {
+                    ModelState.AddModelError(string.Empty, "Selected material is not available for this time range.");
+                }
+                else
+                {
                 _context.Add(reservationMaterial);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+                }
             }
-            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Id", reservationMaterial.MaterialId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", reservationMaterial.UserId);
+            var materialItems = _context.Materials
+                .Select(material => new SelectListItem
+                {
+                    Value = material.Id.ToString(),
+                    Text = $"{material.Name} ({material.MaterialStatus}, Stock: {material.QteStock})"
+                })
+                .ToList();
+            ViewData["MaterialId"] = new SelectList(materialItems, "Value", "Text", reservationMaterial.MaterialId.ToString());
             return View(reservationMaterial);
         }
 

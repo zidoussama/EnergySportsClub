@@ -58,6 +58,11 @@
                     <text> | </text>
                 }
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                @if (User.IsInRole("User"))
+                {
+                    <text> | </text>
+                    <a asp-controller="ReservationMaterials" asp-action="Create" asp-route-materialId="@item.Id">Reserve</a>
+                }
                 @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
                 {
                     <text> | </text>

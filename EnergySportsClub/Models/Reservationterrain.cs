@@ -1,21 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace EnergySportsClub.Models
 {
-    public class ReservationTerrain
+    public class ReservationTerrain : IValidatableObject
     {
         public int Id { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime ReservationDate { get; set; }
+
+        [Required]
+        [DataType(DataType.Time)]
         public TimeSpan StartTime { get; set; }
+
+        [Required]
+        [DataType(DataType.Time)]
         public TimeSpan EndTime { get; set; }
 
 
-        public string UserId { get; set; }
+        [Required]
+        public string UserId { get; set; } = string.Empty;
         [ValidateNever]
         public ApplicationUser User { get; set; } 
 
+        [Required]
         public int TerrainId { get; set; }
         [ValidateNever]
         public Terrain Terrain { get; set; } 
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (ReservationDate.Date < DateTime.Today)
+            {
+                yield return new ValidationResult("Reservation date must be today or later.", new[] { nameof(ReservationDate) });
+            }
+
+            if (EndTime <= StartTime)
+            {
+                yield return new ValidationResult("End time must be after start time.", new[] { nameof(EndTime) });
+            }
+        }
     }
 }

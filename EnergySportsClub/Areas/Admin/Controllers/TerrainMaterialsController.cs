@@ -1,0 +1,130 @@
+using System.Linq;
+using System.Threading.Tasks;
+using EnergySportsClub.Data;
+using EnergySportsClub.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace EnergySportsClub.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+    public class TerrainMaterialsController : Controller
+    {
+        private readonly DbcontextTest _context;
+
+        public TerrainMaterialsController(DbcontextTest context)
+        {
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var items = await _context.TerrainMaterial.ToListAsync();
+            return View("~/Views/TerrainMaterials/Index.cshtml", items);
+        }
+
+        public IActionResult Create()
+        {
+            return View("~/Views/TerrainMaterials/Create.cshtml");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id")] TerrainMaterial terrainMaterial)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(terrainMaterial);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View("~/Views/TerrainMaterials/Create.cshtml", terrainMaterial);
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var terrainMaterial = await _context.TerrainMaterial.FindAsync(id);
+            if (terrainMaterial == null)
+            {
+                return NotFound();
+            }
+
+            return View("~/Views/TerrainMaterials/Edit.cshtml", terrainMaterial);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id")] TerrainMaterial terrainMaterial)
+        {
+            if (id != terrainMaterial.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(terrainMaterial);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TerrainMaterialExists(terrainMaterial.Id))
+                    {
+                        return NotFound();
+                    }
+
+                    throw;
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View("~/Views/TerrainMaterials/Edit.cshtml", terrainMaterial);
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var terrainMaterial = await _context.TerrainMaterial.FirstOrDefaultAsync(m => m.Id == id);
+            if (terrainMaterial == null)
+            {
+                return NotFound();
+            }
+
+            return View("~/Views/TerrainMaterials/Delete.cshtml", terrainMaterial);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var terrainMaterial = await _context.TerrainMaterial.FindAsync(id);
+            if (terrainMaterial != null)
+            {
+                _context.TerrainMaterial.Remove(terrainMaterial);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool TerrainMaterialExists(int id)
+        {
+            return _context.TerrainMaterial.Any(e => e.Id == id);
+        }
+    }
+}

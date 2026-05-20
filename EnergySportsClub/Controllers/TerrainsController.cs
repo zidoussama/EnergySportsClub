@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +21,21 @@ namespace EnergySportsClub.Controllers
         }
 
         // GET: Terrains
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Terrains.ToListAsync());
         }
 
+        [Authorize(Roles = "User")]
+        [HttpGet("/Home/UserInterface/terrain")]
+        public async Task<IActionResult> UserTerrains()
+        {
+            return View("Index", await _context.Terrains.ToListAsync());
+        }
+
         // GET: Terrains/Details/5
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,6 +54,7 @@ namespace EnergySportsClub.Controllers
         }
 
         // GET: Terrains/Create
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +65,7 @@ namespace EnergySportsClub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Create([Bind("Id,Type,Dimensions,TerrainStatus,PricePerHour")] Terrain terrain)
         {
             if (ModelState.IsValid)
@@ -66,6 +78,7 @@ namespace EnergySportsClub.Controllers
         }
 
         // GET: Terrains/Edit/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +99,7 @@ namespace EnergySportsClub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Dimensions,TerrainStatus,PricePerHour")] Terrain terrain)
         {
             if (id != terrain.Id)
@@ -117,6 +131,7 @@ namespace EnergySportsClub.Controllers
         }
 
         // GET: Terrains/Delete/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +152,7 @@ namespace EnergySportsClub.Controllers
         // POST: Terrains/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var terrain = await _context.Terrains.FindAsync(id);

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +15,12 @@ namespace EnergySportsClub.Controllers
     public class ReservationTerrainsController : Controller
     {
         private readonly DbcontextTest _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReservationTerrainsController(DbcontextTest context)
+        public ReservationTerrainsController(DbcontextTest context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ReservationTerrains
@@ -47,11 +51,23 @@ namespace EnergySportsClub.Controllers
         }
 
         // GET: ReservationTerrains/Create
-        public IActionResult Create()
+        [Authorize(Roles = "User")]
+        public IActionResult Create(int? terrainId)
         {
-            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            var terrainItems = _context.Terrains
+                .Select(terrain => new SelectListItem
+                {
+                    Value = terrain.Id.ToString(),
+                    Text = $"{terrain.Type} ({terrain.TerrainStatus})"
+                })
+                .ToList();
+            ViewData["TerrainId"] = new SelectList(terrainItems, "Value", "Text", terrainId?.ToString());
+            var model = new ReservationTerrain
+            {
+                TerrainId = terrainId ?? 0,
+                ReservationDate = DateTime.Today
+            };
+            return View(model);
         }
 
         // POST: ReservationTerrains/Create
@@ -59,16 +75,79 @@ namespace EnergySportsClub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ReservationDate,StartTime,EndTime,UserId,TerrainId")] ReservationTerrain reservationTerrain)
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> Create([Bind("Id,ReservationDate,StartTime,EndTime,TerrainId")] ReservationTerrain reservationTerrain)
         {
+            reservationTerrain.UserId = _userManager.GetUserId(User) ?? string.Empty;
+            ModelState.Remove(nameof(ReservationTerrain.UserId));
+
             if (ModelState.IsValid)
             {
-                _context.Add(reservationTerrain);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var terrain = await _context.Terrains.FindAsync(reservationTerrain.TerrainId);
+                if (terrain == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Selected terrain was not found.");
+                }
+                else
+                {
+                    var now = DateTime.Now;
+                    var reservationDate = reservationTerrain.ReservationDate.Date;
+                    var reservationStart = reservationDate.Add(reservationTerrain.StartTime);
+                    var reservationEnd = reservationDate.Add(reservationTerrain.EndTime);
+
+                    if (terrain.TerrainStatus == Terrain.Status.Unavailable)
+                    {
+                        var hasActiveReservation = await _context.ReservationTerrains
+                            .AnyAsync(reservation => reservation.TerrainId == reservationTerrain.TerrainId
+                                && reservation.ReservationDate.Date.Add(reservation.EndTime) > now);
+
+                        if (!hasActiveReservation)
+                        {
+                            terrain.TerrainStatus = Terrain.Status.Available;
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+
+                    if (terrain.TerrainStatus == Terrain.Status.Unavailable)
+                    {
+                        ModelState.AddModelError(string.Empty, "Selected terrain is unavailable.");
+                    }
+                    else
+                    {
+                        var hasOverlap = await _context.ReservationTerrains
+                            .AnyAsync(reservation => reservation.TerrainId == reservationTerrain.TerrainId
+                                && reservation.ReservationDate.Date == reservationDate
+                                && reservationTerrain.StartTime < reservation.EndTime
+                                && reservationTerrain.EndTime > reservation.StartTime);
+
+                        if (hasOverlap)
+                        {
+                            ModelState.AddModelError(string.Empty, "Selected terrain is not available for this time range.");
+                        }
+                        else
+                        {
+                            _context.Add(reservationTerrain);
+
+                            if (reservationStart <= now && reservationEnd > now)
+                            {
+                                terrain.TerrainStatus = Terrain.Status.Unavailable;
+                            }
+
+                            await _context.SaveChangesAsync();
+                            TempData["Message"] = "Reservation created successfully.";
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
             }
-            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Id", reservationTerrain.TerrainId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", reservationTerrain.UserId);
+            var terrainItems = _context.Terrains
+                .Select(terrain => new SelectListItem
+                {
+                    Value = terrain.Id.ToString(),
+                    Text = $"{terrain.Type} ({terrain.TerrainStatus})"
+                })
+                .ToList();
+            ViewData["TerrainId"] = new SelectList(terrainItems, "Value", "Text", reservationTerrain.TerrainId.ToString());
             return View(reservationTerrain);
         }
 
