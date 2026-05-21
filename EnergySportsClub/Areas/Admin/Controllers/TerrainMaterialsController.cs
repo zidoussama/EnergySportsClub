@@ -4,6 +4,7 @@ using EnergySportsClub.Data;
 using EnergySportsClub.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace EnergySportsClub.Areas.Admin.Controllers
@@ -21,18 +22,23 @@ namespace EnergySportsClub.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var items = await _context.TerrainMaterial.ToListAsync();
+            var items = await _context.TerrainMaterial
+                .Include(item => item.Terrain)
+                .Include(item => item.Material)
+                .ToListAsync();
             return View("~/Views/TerrainMaterials/Index.cshtml", items);
         }
 
         public IActionResult Create()
         {
+            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Type");
+            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Name");
             return View("~/Views/TerrainMaterials/Create.cshtml");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] TerrainMaterial terrainMaterial)
+        public async Task<IActionResult> Create([Bind("Id,TerrainId,MaterialId")] TerrainMaterial terrainMaterial)
         {
             if (ModelState.IsValid)
             {
@@ -41,6 +47,8 @@ namespace EnergySportsClub.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Type", terrainMaterial.TerrainId);
+            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Name", terrainMaterial.MaterialId);
             return View("~/Views/TerrainMaterials/Create.cshtml", terrainMaterial);
         }
 
@@ -57,12 +65,14 @@ namespace EnergySportsClub.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Type", terrainMaterial.TerrainId);
+            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Name", terrainMaterial.MaterialId);
             return View("~/Views/TerrainMaterials/Edit.cshtml", terrainMaterial);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] TerrainMaterial terrainMaterial)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TerrainId,MaterialId")] TerrainMaterial terrainMaterial)
         {
             if (id != terrainMaterial.Id)
             {
@@ -89,6 +99,8 @@ namespace EnergySportsClub.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Type", terrainMaterial.TerrainId);
+            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Name", terrainMaterial.MaterialId);
             return View("~/Views/TerrainMaterials/Edit.cshtml", terrainMaterial);
         }
 

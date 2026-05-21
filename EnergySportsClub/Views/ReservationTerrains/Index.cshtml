@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
 }
 
 <h1>Index</h1>
@@ -22,11 +23,14 @@
                 @Html.DisplayNameFor(model => model.EndTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                Terrain
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Terrain)
-            </th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>
+                    User
+                </th>
+            }
             <th></th>
         </tr>
     </thead>
@@ -43,11 +47,14 @@
                 @Html.DisplayFor(modelItem => item.EndTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @item.Terrain?.Type (@item.Terrain?.Dimensions)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Terrain.Id)
-            </td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @item.User?.Email
+                </td>
+            }
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

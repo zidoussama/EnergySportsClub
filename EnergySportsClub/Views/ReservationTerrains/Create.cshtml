@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
 }
 
 <h1>Create</h1>
@@ -36,6 +37,15 @@
                 <label asp-for="TerrainId" class="control-label"></label>
                 <select asp-for="TerrainId" class ="form-control" asp-items="ViewBag.TerrainId"></select>
             </div>
+            @if (User.IsInRole("Admin") && ViewBag.UserId != null)
+            {
+                <div class="form-group">
+                    <label asp-for="UserId" class="control-label"></label>
+                    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-text" id="terrainAvailability"></div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -49,4 +59,54 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const terrainDate = document.getElementById("ReservationDate");
+        const terrainStart = document.getElementById("StartTime");
+        const terrainEnd = document.getElementById("EndTime");
+        const terrainSelect = document.getElementById("TerrainId");
+        const availabilityTarget = document.getElementById("terrainAvailability");
+
+        const terrainInputs = [terrainDate, terrainStart, terrainEnd];
+        terrainInputs.forEach(input => {
+            if (input) {
+                input.addEventListener("change", updateAvailableTerrains);
+            }
+        });
+
+        async function updateAvailableTerrains() {
+            if (!terrainDate.value || !terrainStart.value || !terrainEnd.value) {
+                return;
+            }
+
+            const response = await fetch(`/ReservationTerrains/AvailableTerrains?reservationDate=${terrainDate.value}&startTime=${terrainStart.value}&endTime=${terrainEnd.value}`);
+            if (!response.ok) {
+                return;
+            }
+
+            const data = await response.json();
+            terrainSelect.innerHTML = "";
+
+            if (data.length === 0) {
+                availabilityTarget.textContent = "No terrains available for this time range.";
+                return;
+            }
+
+            availabilityTarget.textContent = "";
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item.label;
+                terrainSelect.appendChild(option);
+            });
+        }
+
+        updateAvailableTerrains();
+
+        document.querySelector("form").addEventListener("submit", (event) => {
+            if (terrainStart.value && terrainEnd.value && terrainStart.value >= terrainEnd.value) {
+                event.preventDefault();
+                alert("End time must be after start time.");
+            }
+        });
+    </script>
 }

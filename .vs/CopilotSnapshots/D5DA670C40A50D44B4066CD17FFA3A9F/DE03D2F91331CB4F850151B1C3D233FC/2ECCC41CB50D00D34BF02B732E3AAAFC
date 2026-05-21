@@ -1,0 +1,101 @@
+﻿@model EnergySportsClub.Models.ReservationTerrain
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<h4>ReservationTerrain</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="ReservationTerrains" asp-action="Create" method="post" asp-antiforgery="true">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ReservationDate" class="control-label"></label>
+                <input asp-for="ReservationDate" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="ReservationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" class="form-control" type="time" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" class="form-control" type="time" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TerrainId" class="control-label"></label>
+                <select asp-for="TerrainId" class ="form-control" asp-items="ViewBag.TerrainId"></select>
+            </div>
+            <div class="form-text" id="terrainAvailability"></div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const terrainDate = document.getElementById("ReservationDate");
+        const terrainStart = document.getElementById("StartTime");
+        const terrainEnd = document.getElementById("EndTime");
+        const terrainSelect = document.getElementById("TerrainId");
+        const availabilityTarget = document.getElementById("terrainAvailability");
+
+        const terrainInputs = [terrainDate, terrainStart, terrainEnd];
+        terrainInputs.forEach(input => {
+            if (input) {
+                input.addEventListener("change", updateAvailableTerrains);
+            }
+        });
+
+        async function updateAvailableTerrains() {
+            if (!terrainDate.value || !terrainStart.value || !terrainEnd.value) {
+                return;
+            }
+
+            const response = await fetch(`/ReservationTerrains/AvailableTerrains?reservationDate=${terrainDate.value}&startTime=${terrainStart.value}&endTime=${terrainEnd.value}`);
+            if (!response.ok) {
+                return;
+            }
+
+            const data = await response.json();
+            terrainSelect.innerHTML = "";
+
+            if (data.length === 0) {
+                availabilityTarget.textContent = "No terrains available for this time range.";
+                return;
+            }
+
+            availabilityTarget.textContent = "";
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item.label;
+                terrainSelect.appendChild(option);
+            });
+        }
+
+        document.querySelector("form").addEventListener("submit", (event) => {
+            if (terrainStart.value && terrainEnd.value && terrainStart.value >= terrainEnd.value) {
+                event.preventDefault();
+                alert("End time must be after start time.");
+            }
+        });
+    </script>
+}

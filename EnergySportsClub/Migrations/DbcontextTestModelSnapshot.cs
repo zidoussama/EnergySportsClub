@@ -146,6 +146,9 @@ namespace EnergySportsClub.Migrations
                     b.Property<int>("MaterialId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
 

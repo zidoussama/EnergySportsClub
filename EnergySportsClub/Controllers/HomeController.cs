@@ -1,12 +1,25 @@
+using EnergySportsClub.Data;
 using EnergySportsClub.Models;
+using EnergySportsClub.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace EnergySportsClub.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly DbcontextTest _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public HomeController(DbcontextTest context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -19,9 +32,80 @@ namespace EnergySportsClub.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult AdminDashboard()
+        public async Task<IActionResult> AdminDashboard()
         {
-            return View();
+            var today = DateTime.Today;
+            var startOfWeek = today.AddDays(today.DayOfWeek == DayOfWeek.Sunday ? -6 : DayOfWeek.Monday - today.DayOfWeek);
+            var endOfWeek = startOfWeek.AddDays(7);
+
+            var terrainReservations = _context.ReservationTerrains.AsNoTracking();
+            var materialReservations = _context.ReservationMaterials.AsNoTracking();
+
+            var totalTerrains = await _context.Terrains.CountAsync();
+            var usersInRole = await _userManager.GetUsersInRoleAsync("User");
+
+            var reservationsToday = await terrainReservations.CountAsync(reservation => reservation.ReservationDate.Date == today)
+                + await materialReservations.CountAsync(reservation => reservation.ReservationDate.Date == today);
+
+            var reservationsThisWeek = await terrainReservations.CountAsync(reservation => reservation.ReservationDate.Date >= startOfWeek && reservation.ReservationDate.Date < endOfWeek)
+                + await materialReservations.CountAsync(reservation => reservation.ReservationDate.Date >= startOfWeek && reservation.ReservationDate.Date < endOfWeek);
+
+            var totalReservations = await terrainReservations.CountAsync() + await materialReservations.CountAsync();
+
+            var reservationHours = await terrainReservations
+                .Select(reservation => reservation.StartTime.Hours)
+                .Concat(materialReservations.Select(reservation => reservation.StartTime.Hours))
+                .ToListAsync();
+
+            int? peakHour = reservationHours.Count == 0
+                ? null
+                : reservationHours
+                    .GroupBy(hour => hour)
+                    .OrderByDescending(group => group.Count())
+                    .ThenBy(group => group.Key)
+                    .Select(group => group.Key)
+                    .FirstOrDefault();
+
+            var reservationsByDay = await terrainReservations
+                .Select(reservation => reservation.ReservationDate.Date)
+                .Concat(materialReservations.Select(reservation => reservation.ReservationDate.Date))
+                .GroupBy(date => date)
+                .OrderBy(group => group.Key)
+                .Select(group => new ReservationSummaryItem
+                {
+                    Label = group.Key.ToString("dd/MM/yyyy"),
+                    Count = group.Count()
+                })
+                .ToListAsync();
+
+            var reservationsByWeekDay = await terrainReservations
+                .Select(r => r.ReservationDate)
+                .Concat(materialReservations.Select(r => r.ReservationDate))
+                .ToListAsync();
+
+            var reservationsByWeekDayResult = reservationsByWeekDay
+                .GroupBy(date => date.DayOfWeek)
+                .OrderBy(group => group.Key)
+                .Select(group => new ReservationSummaryItem
+                {
+                    Label = group.Key.ToString(),
+                    Count = group.Count()
+                })
+                .ToList();
+
+            var model = new AdminDashboardViewModel
+            {
+                TotalReservations = totalReservations,
+                TotalTerrains = totalTerrains,
+                TotalClients = usersInRole.Count,
+                ReservationsToday = reservationsToday,
+                ReservationsThisWeek = reservationsThisWeek,
+                PeakReservationHour = peakHour,
+                ReservationsByDay = reservationsByDay,
+                ReservationsByWeekDay = reservationsByWeekDayResult
+            };
+
+            return View(model);
         }
 
         [Authorize(Roles = "Manager")]

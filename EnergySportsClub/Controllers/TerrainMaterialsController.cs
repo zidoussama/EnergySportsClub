@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EnergySportsClub.Data;
+using EnergySportsClub.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using EnergySportsClub.Data;
-using EnergySportsClub.Models;
 
 namespace EnergySportsClub.Controllers
 {
+    [Authorize(Roles = "Admin,Manager")]
     public class TerrainMaterialsController : Controller
     {
         private readonly DbcontextTest _context;
@@ -22,7 +24,11 @@ namespace EnergySportsClub.Controllers
         // GET: TerrainMaterials
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TerrainMaterial.ToListAsync());
+            var items = await _context.TerrainMaterial
+                .Include(item => item.Terrain)
+                .Include(item => item.Material)
+                .ToListAsync();
+            return View(items);
         }
 
         // GET: TerrainMaterials/Details/5
@@ -46,6 +52,8 @@ namespace EnergySportsClub.Controllers
         // GET: TerrainMaterials/Create
         public IActionResult Create()
         {
+            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Type");
+            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Name");
             return View();
         }
 
@@ -54,7 +62,7 @@ namespace EnergySportsClub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] TerrainMaterial terrainMaterial)
+        public async Task<IActionResult> Create([Bind("Id,TerrainId,MaterialId")] TerrainMaterial terrainMaterial)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +70,8 @@ namespace EnergySportsClub.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Type", terrainMaterial.TerrainId);
+            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Name", terrainMaterial.MaterialId);
             return View(terrainMaterial);
         }
 
@@ -78,6 +88,8 @@ namespace EnergySportsClub.Controllers
             {
                 return NotFound();
             }
+            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Type", terrainMaterial.TerrainId);
+            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Name", terrainMaterial.MaterialId);
             return View(terrainMaterial);
         }
 
@@ -86,7 +98,7 @@ namespace EnergySportsClub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] TerrainMaterial terrainMaterial)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TerrainId,MaterialId")] TerrainMaterial terrainMaterial)
         {
             if (id != terrainMaterial.Id)
             {
@@ -113,6 +125,8 @@ namespace EnergySportsClub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["TerrainId"] = new SelectList(_context.Terrains, "Id", "Type", terrainMaterial.TerrainId);
+            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Name", terrainMaterial.MaterialId);
             return View(terrainMaterial);
         }
 

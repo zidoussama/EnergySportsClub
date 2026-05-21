@@ -2,9 +2,15 @@
 
 @{
     ViewData["Title"] = "Create";
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
 }
 
 <h1>Create</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
 
 <h4>ReservationMaterial</h4>
 <hr />
@@ -33,9 +39,23 @@
                 <span asp-validation-for="ReturnTime" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" min="1" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="MaterialId" class="control-label"></label>
                 <select asp-for="MaterialId" class ="form-control" asp-items="ViewBag.MaterialId"></select>
             </div>
+            @if (User.IsInRole("Admin") && ViewBag.UserId != null)
+            {
+                <div class="form-group">
+                    <label asp-for="UserId" class="control-label"></label>
+                    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-text" id="materialRemaining"></div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -49,4 +69,52 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const materialDate = document.getElementById("ReservationDate");
+        const materialStart = document.getElementById("StartTime");
+        const materialReturn = document.getElementById("ReturnTime");
+        const materialSelect = document.getElementById("MaterialId");
+        const remainingTarget = document.getElementById("materialRemaining");
+
+        const materialInputs = [materialDate, materialStart, materialReturn, materialSelect];
+        materialInputs.forEach(input => {
+            if (input) {
+                input.addEventListener("change", updateMaterialRemaining);
+            }
+        });
+
+        async function updateMaterialRemaining() {
+            if (!materialDate.value || !materialStart.value || !materialReturn.value || !materialSelect.value) {
+                remainingTarget.textContent = "";
+                return;
+            }
+
+            if (materialReturn.value <= materialStart.value) {
+                remainingTarget.textContent = "Return time must be after start time.";
+                return;
+            }
+
+            const response = await fetch(`/ReservationMaterials/RemainingStock?materialId=${materialSelect.value}&reservationDate=${materialDate.value}&startTime=${materialStart.value}&returnTime=${materialReturn.value}`);
+            if (!response.ok) {
+                remainingTarget.textContent = "";
+                return;
+            }
+
+            const data = await response.json();
+            remainingTarget.textContent = `Remaining stock for this time range: ${data.remaining}`;
+        }
+
+        updateMaterialRemaining();
+
+        document.querySelector("form").addEventListener("submit", (event) => {
+            if (materialStart.value && document.getElementById("EndTime").value && materialStart.value >= document.getElementById("EndTime").value) {
+                event.preventDefault();
+                alert("End time must be after start time.");
+            }
+            if (materialReturn.value && document.getElementById("EndTime").value && materialReturn.value < document.getElementById("EndTime").value) {
+                event.preventDefault();
+                alert("Return time must be after end time.");
+            }
+        });
+    </script>
 }

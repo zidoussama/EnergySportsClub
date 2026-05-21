@@ -354,7 +354,6 @@ D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\comp
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\nezrqnk58p-{0}-muycvpuwrr-muycvpuwrr.gz
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\v0zgfp0y55-{0}-87fc7y1x7t-87fc7y1x7t.gz
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\yfc7ypekbg-{0}-mlv21k5csn-mlv21k5csn.gz
-D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\4x6xs6ibea-{0}-b9sayid5wm-b9sayid5wm.gz
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\5sa08a7sds-{0}-61n19gt1b8-61n19gt1b8.gz
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\ygr4cg9hr7-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\fbadjap5s7-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -423,7 +422,6 @@ D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\stat
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\staticwebassets.development.json
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\swae.build.ex.cache
-D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\EnergySp.EE18507F.Up2Date
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\EnergySportsClub.dll
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\refint\EnergySportsClub.dll
@@ -431,3 +429,5 @@ D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\Ener
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\EnergySportsClub.genruntimeconfig.cache
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\ref\EnergySportsClub.dll
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\EnergySportsClub.sourcelink.json
+D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\4x6xs6ibea-{0}-ipjn7bigct-ipjn7bigct.gz

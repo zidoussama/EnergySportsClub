@@ -12,12 +12,20 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Terrain</th>
+            <th>Material</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @item.Terrain?.Type (@item.Terrain?.Dimensions)
+            </td>
+            <td>
+                @item.Material?.Name
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

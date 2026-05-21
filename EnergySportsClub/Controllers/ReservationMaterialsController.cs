@@ -26,8 +26,16 @@ namespace EnergySportsClub.Controllers
         // GET: ReservationMaterials
         public async Task<IActionResult> Index()
         {
-            var dbcontextTest = _context.ReservationMaterials.Include(r => r.Material).Include(r => r.User);
-            return View(await dbcontextTest.ToListAsync());
+            IQueryable<ReservationMaterial> query = _context.ReservationMaterials
+                .Include(r => r.Material)
+                .Include(r => r.User);
+            if (User.IsInRole("User"))
+            {
+                var userId = _userManager.GetUserId(User);
+                query = query.Where(reservation => reservation.UserId == userId);
+            }
+
+            return View(await query.ToListAsync());
         }
 
         // GET: ReservationMaterials/Details/5
@@ -65,7 +73,8 @@ namespace EnergySportsClub.Controllers
             var model = new ReservationMaterial
             {
                 MaterialId = materialId ?? 0,
-                ReservationDate = DateTime.Today
+                ReservationDate = DateTime.Today,
+                Quantity = 1
             };
             return View(model);
         }
@@ -76,13 +85,25 @@ namespace EnergySportsClub.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> Create([Bind("Id,ReservationDate,StartTime,EndTime,ReturnTime,MaterialId")] ReservationMaterial reservationMaterial)
+        public async Task<IActionResult> Create([Bind("Id,ReservationDate,StartTime,EndTime,ReturnTime,MaterialId,Quantity")] ReservationMaterial reservationMaterial)
         {
             reservationMaterial.UserId = _userManager.GetUserId(User) ?? string.Empty;
             ModelState.Remove(nameof(ReservationMaterial.UserId));
 
+            if (reservationMaterial.ReservationDate.Date < DateTime.Today)
+            {
+                ModelState.AddModelError(nameof(ReservationMaterial.ReservationDate), "Reservation date must be today or later.");
+            }
+
             if (ModelState.IsValid)
             {
+                var material = await _context.Materials.FirstOrDefaultAsync(item => item.Id == reservationMaterial.MaterialId);
+                if (material == null)
+                {
+                    ModelState.AddModelError(nameof(ReservationMaterial.MaterialId), "Selected material was not found.");
+                }
+                else
+                {
                 var reservationDate = reservationMaterial.ReservationDate.Date;
                 var hasOverlap = await _context.ReservationMaterials
                     .AnyAsync(reservation => reservation.MaterialId == reservationMaterial.MaterialId
@@ -90,15 +111,29 @@ namespace EnergySportsClub.Controllers
                         && reservationMaterial.StartTime < reservation.ReturnTime
                         && reservationMaterial.ReturnTime > reservation.StartTime);
 
-                if (hasOverlap)
+                var reservedQuantity = await _context.ReservationMaterials
+                    .Where(reservation => reservation.MaterialId == reservationMaterial.MaterialId
+                        && reservation.ReservationDate.Date == reservationDate
+                        && reservationMaterial.StartTime < reservation.ReturnTime
+                        && reservationMaterial.ReturnTime > reservation.StartTime)
+                    .SumAsync(reservation => reservation.Quantity);
+
+                var remainingStock = material.QteStock - reservedQuantity;
+                if (reservationMaterial.Quantity > remainingStock)
+                {
+                    ModelState.AddModelError(nameof(ReservationMaterial.Quantity), "Insufficient stock for the selected time range.");
+                }
+                else if (hasOverlap && remainingStock <= 0)
                 {
                     ModelState.AddModelError(string.Empty, "Selected material is not available for this time range.");
                 }
                 else
                 {
-                _context.Add(reservationMaterial);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    _context.Add(reservationMaterial);
+                    await _context.SaveChangesAsync();
+                    TempData["Message"] = "Reservation created successfully.";
+                    return RedirectToAction(nameof(Index));
+                }
                 }
             }
             var materialItems = _context.Materials
@@ -125,8 +160,14 @@ namespace EnergySportsClub.Controllers
             {
                 return NotFound();
             }
-            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Id", reservationMaterial.MaterialId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", reservationMaterial.UserId);
+            var materialItems = _context.Materials
+                .Select(material => new SelectListItem
+                {
+                    Value = material.Id.ToString(),
+                    Text = $"{material.Name} - {material.Description}"
+                })
+                .ToList();
+            ViewData["MaterialId"] = new SelectList(materialItems, "Value", "Text", reservationMaterial.MaterialId.ToString());
             return View(reservationMaterial);
         }
 
@@ -135,11 +176,51 @@ namespace EnergySportsClub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ReservationDate,StartTime,EndTime,ReturnTime,MaterialId,UserId")] ReservationMaterial reservationMaterial)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ReservationDate,StartTime,EndTime,ReturnTime,MaterialId,Quantity")] ReservationMaterial reservationMaterial)
         {
             if (id != reservationMaterial.Id)
             {
                 return NotFound();
+            }
+
+            var existingReservation = await _context.ReservationMaterials.AsNoTracking()
+                .FirstOrDefaultAsync(reservation => reservation.Id == id);
+            if (existingReservation == null)
+            {
+                return NotFound();
+            }
+
+            reservationMaterial.UserId = existingReservation.UserId;
+
+            if (reservationMaterial.ReservationDate.Date < DateTime.Today)
+            {
+                ModelState.AddModelError(nameof(ReservationMaterial.ReservationDate), "Reservation date must be today or later.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var material = await _context.Materials.FirstOrDefaultAsync(item => item.Id == reservationMaterial.MaterialId);
+                if (material == null)
+                {
+                    ModelState.AddModelError(nameof(ReservationMaterial.MaterialId), "Selected material was not found.");
+                }
+                else
+                {
+                    var reservationDate = reservationMaterial.ReservationDate.Date;
+                    var reservedQuantity = await _context.ReservationMaterials
+                        .Where(reservation => reservation.MaterialId == reservationMaterial.MaterialId
+                            && reservation.ReservationDate.Date == reservationDate
+                            && reservation.Id != reservationMaterial.Id
+                            && reservationMaterial.StartTime < reservation.ReturnTime
+                            && reservationMaterial.ReturnTime > reservation.StartTime)
+                        .SumAsync(reservation => reservation.Quantity);
+
+                    var remainingStock = material.QteStock - reservedQuantity;
+                    if (reservationMaterial.Quantity > remainingStock)
+                    {
+                        ModelState.AddModelError(nameof(ReservationMaterial.Quantity), "Insufficient stock for the selected time range.");
+                    }
+                }
             }
 
             if (ModelState.IsValid)
@@ -162,9 +243,42 @@ namespace EnergySportsClub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaterialId"] = new SelectList(_context.Materials, "Id", "Id", reservationMaterial.MaterialId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", reservationMaterial.UserId);
+            var materialItems = _context.Materials
+                .Select(material => new SelectListItem
+                {
+                    Value = material.Id.ToString(),
+                    Text = $"{material.Name} - {material.Description}"
+                })
+                .ToList();
+            ViewData["MaterialId"] = new SelectList(materialItems, "Value", "Text", reservationMaterial.MaterialId.ToString());
             return View(reservationMaterial);
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet]
+        public async Task<IActionResult> RemainingStock(int materialId, DateTime reservationDate, TimeSpan startTime, TimeSpan returnTime)
+        {
+            if (returnTime <= startTime)
+            {
+                return BadRequest();
+            }
+
+            var material = await _context.Materials.FirstOrDefaultAsync(item => item.Id == materialId);
+            if (material == null)
+            {
+                return NotFound();
+            }
+
+            var date = reservationDate.Date;
+            var reservedQuantity = await _context.ReservationMaterials
+                .Where(reservation => reservation.MaterialId == materialId
+                    && reservation.ReservationDate.Date == date
+                    && startTime < reservation.ReturnTime
+                    && returnTime > reservation.StartTime)
+                .SumAsync(reservation => reservation.Quantity);
+
+            var remaining = material.QteStock - reservedQuantity;
+            return Ok(new { remaining });
         }
 
         // GET: ReservationMaterials/Delete/5

@@ -21,7 +21,7 @@ namespace EnergySportsClub.Controllers
         }
 
         // GET: Terrains
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Terrains.ToListAsync());
@@ -35,7 +35,7 @@ namespace EnergySportsClub.Controllers
         }
 
         // GET: Terrains/Details/5
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
