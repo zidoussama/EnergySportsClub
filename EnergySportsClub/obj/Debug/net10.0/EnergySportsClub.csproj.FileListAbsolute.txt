@@ -430,4 +430,4 @@ D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\Ener
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\ref\EnergySportsClub.dll
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\EnergySportsClub.sourcelink.json
 D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
-D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\4x6xs6ibea-{0}-ipjn7bigct-ipjn7bigct.gz
+D:\education\2GL\cSharp\EnergySportsClub\EnergySportsClub\obj\Debug\net10.0\compressed\4x6xs6ibea-{0}-j277e0w6v7-j277e0w6v7.gz

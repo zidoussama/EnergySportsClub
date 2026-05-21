@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Manager Dashboard";
+    Layout = "_ManagerLayout";
+}
+
+<h1 class="page-title">Manager Dashboard</h1>
+
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Terrain Management</h5>
+                <p class="card-text text-muted">View availability, update schedules, and manage terrain reservations.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary" asp-controller="Terrains" asp-action="Index">Terrains</a>
+                    <a class="btn btn-outline-secondary" asp-controller="ReservationTerrains" asp-action="Index">Reservations</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Material Management</h5>
+                <p class="card-text text-muted">Track material availability, stock, and assignments.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary" asp-controller="Materials" asp-action="Index">Materials</a>
+                    <a class="btn btn-outline-secondary" asp-controller="ReservationMaterials" asp-action="Index">Reservations</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Assignments</h5>
+                <p class="card-text text-muted">Assign materials to terrains and monitor availability.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary" asp-controller="TerrainMaterials" asp-action="Index">Terrain Materials</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Current Reservations</h5>
+                <p class="text-muted">Review ongoing reservations and adjust schedules as needed.</p>
+                <a class="btn btn-outline-primary" asp-controller="ReservationTerrains" asp-action="Index">View Terrain Reservations</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming Reservations</h5>
+                <p class="text-muted">Check upcoming bookings and prepare materials.</p>
+                <a class="btn btn-outline-primary" asp-controller="ReservationMaterials" asp-action="Index">View Material Reservations</a>
+            </div>
+        </div>
+    </div>
+</div>

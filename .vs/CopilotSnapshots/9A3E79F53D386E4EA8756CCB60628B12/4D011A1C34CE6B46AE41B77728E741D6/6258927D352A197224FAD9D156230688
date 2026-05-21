@@ -1,0 +1,370 @@
+﻿using EnergySportsClub.Data;
+using EnergySportsClub.Models;
+using EnergySportsClub.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace EnergySportsClub.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly DbcontextTest _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public HomeController(DbcontextTest context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "User")]
+        public IActionResult UserInterface()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminDashboard()
+        {
+            var today = DateTime.Today;
+            var startOfWeek = today.AddDays(today.DayOfWeek == DayOfWeek.Sunday ? -6 : DayOfWeek.Monday - today.DayOfWeek);
+            var endOfWeek = startOfWeek.AddDays(7);
+
+            var terrainReservations = _context.ReservationTerrains.AsNoTracking();
+            var materialReservations = _context.ReservationMaterials.AsNoTracking();
+
+            var totalTerrains = await _context.Terrains.CountAsync();
+            var usersInRole = await _userManager.GetUsersInRoleAsync("User");
+
+            var reservationsToday = await terrainReservations.CountAsync(reservation => reservation.ReservationDate.Date == today)
+                + await materialReservations.CountAsync(reservation => reservation.ReservationDate.Date == today);
+
+            var reservationsThisWeek = await terrainReservations.CountAsync(reservation => reservation.ReservationDate.Date >= startOfWeek && reservation.ReservationDate.Date < endOfWeek)
+                + await materialReservations.CountAsync(reservation => reservation.ReservationDate.Date >= startOfWeek && reservation.ReservationDate.Date < endOfWeek);
+
+            var totalReservations = await terrainReservations.CountAsync() + await materialReservations.CountAsync();
+
+            var reservationHours = await terrainReservations
+                .Select(reservation => reservation.StartTime.Hours)
+                .Concat(materialReservations.Select(reservation => reservation.StartTime.Hours))
+                .ToListAsync();
+
+            int? peakHour = reservationHours.Count == 0
+                ? null
+                : reservationHours
+                    .GroupBy(hour => hour)
+                    .OrderByDescending(group => group.Count())
+                    .ThenBy(group => group.Key)
+                    .Select(group => group.Key)
+                    .FirstOrDefault();
+
+            var reservationsByDay = await terrainReservations
+                .Select(reservation => reservation.ReservationDate.Date)
+                .Concat(materialReservations.Select(reservation => reservation.ReservationDate.Date))
+                .GroupBy(date => date)
+                .OrderBy(group => group.Key)
+                .Select(group => new ReservationSummaryItem
+                {
+                    Label = group.Key.ToString("dd/MM/yyyy"),
+                    Count = group.Count()
+                })
+                .ToListAsync();
+
+            var reservationsByWeekDay = await terrainReservations
+                .Select(r => r.ReservationDate)
+                .Concat(materialReservations.Select(r => r.ReservationDate))
+                .ToListAsync();
+
+            var reservationsByWeekDayResult = reservationsByWeekDay
+                .GroupBy(date => date.DayOfWeek)
+                .OrderBy(group => group.Key)
+                .Select(group => new ReservationSummaryItem
+                {
+                    Label = group.Key.ToString(),
+                    Count = group.Count()
+                })
+                .ToList();
+
+            var model = new AdminDashboardViewModel
+            {
+                TotalReservations = totalReservations,
+                TotalTerrains = totalTerrains,
+                TotalClients = usersInRole.Count,
+                ReservationsToday = reservationsToday,
+                ReservationsThisWeek = reservationsThisWeek,
+                PeakReservationHour = peakHour,
+                ReservationsByDay = reservationsByDay,
+                ReservationsByWeekDay = reservationsByWeekDayResult
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> ManagerDashboard()
+        {
+            var today = DateTime.Today;
+            var now = DateTime.Now;
+            var nowTime = now.TimeOfDay;
+            var soonThreshold = now.AddDays(3);
+
+            var terrains = await _context.Terrains
+                .AsNoTracking()
+                .Include(terrain => terrain.ReservationTerrains)
+                .Include(terrain => terrain.TerrainMaterials)
+                .ToListAsync();
+
+            var materials = await _context.Materials
+                .AsNoTracking()
+                .Include(material => material.ReservationMaterials)
+                .Include(material => material.TerrainMaterials)
+                .ToListAsync();
+
+            var terrainReservations = await _context.ReservationTerrains
+                .AsNoTracking()
+                .Include(reservation => reservation.Terrain)
+                .Include(reservation => reservation.User)
+                .OrderBy(reservation => reservation.ReservationDate)
+                .ThenBy(reservation => reservation.StartTime)
+                .ToListAsync();
+
+            var materialReservations = await _context.ReservationMaterials
+                .AsNoTracking()
+                .Include(reservation => reservation.Material)
+                .Include(reservation => reservation.User)
+                .OrderBy(reservation => reservation.ReservationDate)
+                .ThenBy(reservation => reservation.StartTime)
+                .ToListAsync();
+
+            var currentTerrainReservations = terrainReservations
+                .Where(reservation => reservation.ReservationDate.Date == today
+                    && reservation.StartTime <= nowTime
+                    && reservation.EndTime > nowTime)
+                .ToList();
+
+            var upcomingTerrainReservations = terrainReservations
+                .Where(reservation => reservation.ReservationDate.Date > today
+                    || (reservation.ReservationDate.Date == today && reservation.StartTime > nowTime))
+                .Take(8)
+                .ToList();
+
+            var currentMaterialReservations = materialReservations
+                .Where(reservation => reservation.ReservationDate.Date == today
+                    && reservation.StartTime <= nowTime
+                    && reservation.ReturnTime >= nowTime)
+                .ToList();
+
+            var upcomingMaterialReservations = materialReservations
+                .Where(reservation => reservation.ReservationDate.Date > today
+                    || (reservation.ReservationDate.Date == today && reservation.StartTime > nowTime))
+                .Take(8)
+                .ToList();
+
+            var lowStockThreshold = 5;
+            var lowStockMaterials = materials
+                .Where(material => material.QteStock <= lowStockThreshold)
+                .ToList();
+
+            var managerNotifications = new List<ManagerNotificationItem>();
+            if (currentTerrainReservations.Any())
+            {
+                managerNotifications.Add(new ManagerNotificationItem
+                {
+                    Title = "Active terrain reservation",
+                    Message = $"{currentTerrainReservations.Count} terrain reservation(s) are currently active.",
+                    Severity = "info",
+                    Source = "ReservationTerrains"
+                });
+            }
+
+            if (currentMaterialReservations.Any())
+            {
+                managerNotifications.Add(new ManagerNotificationItem
+                {
+                    Title = "Active material reservation",
+                    Message = $"{currentMaterialReservations.Count} material reservation(s) are currently active.",
+                    Severity = "info",
+                    Source = "ReservationMaterials"
+                });
+            }
+
+            if (lowStockMaterials.Any())
+            {
+                managerNotifications.Add(new ManagerNotificationItem
+                {
+                    Title = "Low stock alert",
+                    Message = $"{lowStockMaterials.Count} material item(s) are at or below the stock threshold.",
+                    Severity = "warning",
+                    Source = "Materials"
+                });
+            }
+
+            var reservationConflicts = terrainReservations
+                .GroupBy(reservation => new { reservation.TerrainId, Date = reservation.ReservationDate.Date })
+                .Where(group => group.Count() > 1)
+                .Any(group => group.SelectMany(reservation => group
+                    .Where(other => other.Id != reservation.Id && reservation.StartTime < other.EndTime && reservation.EndTime > other.StartTime))
+                    .Any());
+
+            if (reservationConflicts)
+            {
+                managerNotifications.Add(new ManagerNotificationItem
+                {
+                    Title = "Reservation conflict detected",
+                    Message = "One or more terrain reservations overlap.",
+                    Severity = "danger",
+                    Source = "ReservationTerrains"
+                });
+            }
+
+            if (currentMaterialReservations.Any(reservation => reservation.ReturnTime < nowTime))
+            {
+                managerNotifications.Add(new ManagerNotificationItem
+                {
+                    Title = "Late material return",
+                    Message = "At least one material reservation is past its return time.",
+                    Severity = "danger",
+                    Source = "ReservationMaterials"
+                });
+            }
+
+            var terrainItems = terrains
+                .Select(terrain => new ManagerTerrainItem
+                {
+                    Id = terrain.Id,
+                    Type = terrain.Type,
+                    Dimensions = terrain.Dimensions,
+                    Status = terrain.TerrainStatus.ToString(),
+                    PricePerHour = terrain.PricePerHour,
+                    ReservationCount = terrain.ReservationTerrains.Count,
+                    EditUrl = Url.Action("Edit", "Terrains", new { id = terrain.Id }) ?? string.Empty,
+                    DetailsUrl = Url.Action("Details", "Terrains", new { id = terrain.Id }) ?? string.Empty
+                })
+                .ToList();
+
+            var materialItems = materials
+                .Select(material => new ManagerMaterialItem
+                {
+                    Id = material.Id,
+                    Name = material.Name,
+                    Description = material.Description,
+                    Status = material.MaterialStatus.ToString(),
+                    Stock = material.QteStock,
+                    PricePerHour = material.PricePerHour,
+                    IsLowStock = material.QteStock <= lowStockThreshold,
+                    EditUrl = Url.Action("Edit", "Materials", new { id = material.Id }) ?? string.Empty,
+                    DetailsUrl = Url.Action("Details", "Materials", new { id = material.Id }) ?? string.Empty
+                })
+                .ToList();
+
+            var reservationCalendar = terrainReservations
+                .Select(reservation => new ManagerReservationItem
+                {
+                    Id = reservation.Id,
+                    ResourceType = "Terrain",
+                    ResourceName = reservation.Terrain?.Type ?? $"Terrain #{reservation.TerrainId}",
+                    UserName = reservation.User?.UserName ?? reservation.UserId,
+                    ReservationDate = reservation.ReservationDate,
+                    StartTime = reservation.StartTime,
+                    EndTime = reservation.EndTime,
+                    Status = reservation.ReservationDate.Date == today && reservation.StartTime <= nowTime && reservation.EndTime > nowTime ? "Current" : "Upcoming",
+                    EditUrl = Url.Action("Edit", "ReservationTerrains", new { id = reservation.Id }) ?? string.Empty,
+                    DeleteUrl = Url.Action("Delete", "ReservationTerrains", new { id = reservation.Id }) ?? string.Empty,
+                    DetailsUrl = Url.Action("Details", "ReservationTerrains", new { id = reservation.Id }) ?? string.Empty,
+                    CanEdit = true,
+                    CanCancel = true,
+                    CanChangeAssignedTerrain = true
+                })
+                .Concat(materialReservations.Select(reservation => new ManagerReservationItem
+                {
+                    Id = reservation.Id,
+                    ResourceType = "Material",
+                    ResourceName = reservation.Material?.Name ?? $"Material #{reservation.MaterialId}",
+                    UserName = reservation.User?.UserName ?? reservation.UserId,
+                    ReservationDate = reservation.ReservationDate,
+                    StartTime = reservation.StartTime,
+                    EndTime = reservation.EndTime,
+                    ReturnTime = reservation.ReturnTime,
+                    Status = reservation.ReservationDate.Date == today && reservation.StartTime <= nowTime && reservation.ReturnTime >= nowTime ? "Current" : "Upcoming",
+                    EditUrl = Url.Action("Edit", "ReservationMaterials", new { id = reservation.Id }) ?? string.Empty,
+                    DeleteUrl = Url.Action("Delete", "ReservationMaterials", new { id = reservation.Id }) ?? string.Empty,
+                    DetailsUrl = Url.Action("Details", "ReservationMaterials", new { id = reservation.Id }) ?? string.Empty,
+                    CanEdit = true,
+                    CanCancel = true,
+                    CanChangeAssignedTerrain = false
+                }))
+                .OrderBy(item => item.ReservationDate)
+                .ThenBy(item => item.StartTime)
+                .ToList();
+
+            var currentReservations = reservationCalendar
+                .Where(item => item.Status == "Current")
+                .Take(10)
+                .ToList();
+
+            var upcomingReservations = reservationCalendar
+                .Where(item => item.Status == "Upcoming")
+                .Take(10)
+                .ToList();
+
+            var model = new ManagerDashboardViewModel
+            {
+                TotalTerrains = terrains.Count,
+                AvailableTerrains = terrains.Count(terrain => terrain.TerrainStatus == Terrain.Status.Available),
+                UnavailableTerrains = terrains.Count(terrain => terrain.TerrainStatus == Terrain.Status.Unavailable),
+                TotalMaterials = materials.Count,
+                AvailableMaterials = materials.Count(material => material.MaterialStatus == Material.Status.Available),
+                UnavailableMaterials = materials.Count(material => material.MaterialStatus == Material.Status.Unavailable),
+                LowStockMaterials = lowStockMaterials.Count,
+                TotalTerrainReservations = terrainReservations.Count,
+                CurrentTerrainReservations = currentTerrainReservations.Count,
+                UpcomingTerrainReservations = upcomingTerrainReservations.Count,
+                TotalMaterialReservations = materialReservations.Count,
+                CurrentMaterialReservations = currentMaterialReservations.Count,
+                UpcomingMaterialReservations = upcomingMaterialReservations.Count,
+                Terrains = terrainItems,
+                Materials = materialItems,
+                CurrentReservations = currentReservations,
+                UpcomingReservations = upcomingReservations,
+                ReservationCalendar = reservationCalendar.Take(20).ToList(),
+                Notifications = managerNotifications,
+                LowStockAlerts = lowStockMaterials.Select(material => new ManagerMaterialItem
+                {
+                    Id = material.Id,
+                    Name = material.Name,
+                    Description = material.Description,
+                    Status = material.MaterialStatus.ToString(),
+                    Stock = material.QteStock,
+                    PricePerHour = material.PricePerHour,
+                    IsLowStock = true,
+                    EditUrl = Url.Action("Edit", "Materials", new { id = material.Id }) ?? string.Empty,
+                    DetailsUrl = Url.Action("Details", "Materials", new { id = material.Id }) ?? string.Empty
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}

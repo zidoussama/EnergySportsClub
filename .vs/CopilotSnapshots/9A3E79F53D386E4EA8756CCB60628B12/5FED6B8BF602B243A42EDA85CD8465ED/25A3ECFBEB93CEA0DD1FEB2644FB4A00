@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EnergySportsClub</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EnergySportsClub.styles.css" asp-append-version="true" />
+</head>
+<body class="app-body">
+    <div class="app-shell">
+        <aside class="app-sidebar">
+            <div class="app-sidebar-branding">
+                <a class="app-brand app-sidebar-brand" asp-area="" asp-controller="Home" asp-action="UserInterface">
+                    <span class="app-brand-mark">C</span>
+                    <span>Client Portal</span>
+                </a>
+                <div class="app-sidebar-badge">Reservations hub</div>
+            </div>
+
+            <nav class="app-sidebar-nav">
+                <div class="sidebar-section-title">Overview</div>
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="UserInterface">Dashboard</a>
+                <a class="nav-link" asp-area="" asp-controller="ReservationTerrains" asp-action="Index">Terrain reservations</a>
+                <a class="nav-link" asp-area="" asp-controller="ReservationMaterials" asp-action="Index">Material reservations</a>
+
+                <div class="sidebar-section-title">Profile</div>
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Email">Email</a>
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Password</a>
+            </nav>
+
+            <div class="app-sidebar-footer">
+                <partial name="_LoginPartial" />
+            </div>
+        </aside>
+        <main role="main" class="app-main">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

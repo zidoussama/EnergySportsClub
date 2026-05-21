@@ -9,62 +9,38 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EnergySportsClub.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <div class="sidebar-layout">
-        <aside class="sidebar d-flex flex-column">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Admin Dashboard</a>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Admin" asp-page="/Users/Index">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Admin" asp-page="/Managers/Index">Managers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Materials" asp-action="Index">Materials</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Terrains" asp-action="Index">Terrains</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Admin" asp-controller="TerrainMaterials" asp-action="Index">Terrain Materials</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Admin" asp-controller="ReservationMaterials" asp-action="Index">Reservation Materials</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Admin" asp-controller="ReservationTerrains" asp-action="Index">Reservation Terrains</a>
-                </li>
-            </ul>
+<body class="app-body">
+    <div class="app-shell">
+        <aside class="app-sidebar">
+            <div class="app-sidebar-branding">
+                <a class="app-brand app-sidebar-brand" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+                    <span class="app-brand-mark">A</span>
+                    <span>Admin Portal</span>
+                </a>
+                <div class="app-sidebar-badge">Control center</div>
+            </div>
 
-            <div class="sidebar-section-title">Profile</div>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Email">Email</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Change Password</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/TwoFactorAuthentication">Two-Factor</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/PersonalData">Personal Data</a>
-                </li>
-            </ul>
+            <nav class="app-sidebar-nav">
+                <div class="sidebar-section-title">Overview</div>
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Dashboard</a>
+                <a class="nav-link" asp-area="Admin" asp-page="/Users/Index">Users</a>
+                <a class="nav-link" asp-area="Admin" asp-page="/Managers/Index">Managers</a>
 
-            <div class="sidebar-footer">
+                <div class="sidebar-section-title">Operations</div>
+                <a class="nav-link" asp-area="Admin" asp-controller="Materials" asp-action="Index">Materials</a>
+                <a class="nav-link" asp-area="Admin" asp-controller="Terrains" asp-action="Index">Terrains</a>
+                <a class="nav-link" asp-area="Admin" asp-controller="TerrainMaterials" asp-action="Index">Terrain Materials</a>
+                <a class="nav-link" asp-area="Admin" asp-controller="ReservationMaterials" asp-action="Index">Reservation Materials</a>
+                <a class="nav-link" asp-area="Admin" asp-controller="ReservationTerrains" asp-action="Index">Reservation Terrains</a>
+            </nav>
+
+            <div class="app-sidebar-footer">
                 <partial name="_LoginPartial" />
             </div>
         </aside>
-        <div class="sidebar-content">
-            <main role="main" class="content-wrapper">
-                @RenderBody()
-            </main>
-        </div>
+        <main role="main" class="app-main">
+            @RenderBody()
+        </main>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

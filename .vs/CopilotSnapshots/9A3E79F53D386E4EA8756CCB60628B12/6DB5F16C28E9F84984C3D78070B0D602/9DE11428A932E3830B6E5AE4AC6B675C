@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using EnergySportsClub.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="profile-dropdown dropdown dropup">
+@if (SignInManager.IsSignedIn(User))
+{
+    <button class="btn btn-profile dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="profile-avatar">@((UserManager.GetUserName(User) ?? "U").Substring(0, 1).ToUpper())</span>
+        <span class="profile-label text-start">
+            <span class="d-block fw-semibold">@UserManager.GetUserName(User)</span>
+            <small class="d-block opacity-75">Profile & settings</small>
+        </span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end profile-menu">
+        <li class="dropdown-header">Identity settings</li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a></li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Email">Email</a></li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Change password</a></li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/TwoFactorAuthentication">Two-factor authentication</a></li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/PersonalData">Personal data</a></li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/ExternalLogins">External logins</a></li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/DownloadPersonalData">Download personal data</a></li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/DeletePersonalData">Delete personal data</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="dropdown-item text-danger">Logout</button>
+            </form>
+        </li>
+    </ul>
+}
+else
+{
+    <button class="btn btn-profile dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="profile-avatar">?</span>
+        <span class="profile-label text-start">
+            <span class="d-block fw-semibold">Guest</span>
+            <small class="d-block opacity-75">Login or register</small>
+        </span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end profile-menu">
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+    </ul>
+}
+</div>

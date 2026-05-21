@@ -1,0 +1,280 @@
+﻿@model EnergySportsClub.ViewModels.ManagerDashboardViewModel
+@{
+    ViewData["Title"] = "Manager Dashboard";
+    Layout = "_ManagerLayout";
+}
+
+<h1 class="page-title">Manager Dashboard</h1>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Terrains</div>
+                <h4>@Model.TotalTerrains</h4>
+                <div>@Model.AvailableTerrains available / @Model.UnavailableTerrains unavailable</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Materials</div>
+                <h4>@Model.TotalMaterials</h4>
+                <div>@Model.AvailableMaterials available / @Model.UnavailableMaterials unavailable</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Terrain Reservations</div>
+                <h4>@Model.TotalTerrainReservations</h4>
+                <div>@Model.CurrentTerrainReservations current / @Model.UpcomingTerrainReservations upcoming</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Material Reservations</div>
+                <h4>@Model.TotalMaterialReservations</h4>
+                <div>@Model.CurrentMaterialReservations current / @Model.UpcomingMaterialReservations upcoming</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Terrain Management</h5>
+                <p class="card-text text-muted">View availability, edit terrain information, manage schedules, and handle terrain reservations.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary" asp-controller="Terrains" asp-action="Index">Terrains</a>
+                    <a class="btn btn-outline-secondary" asp-controller="ReservationTerrains" asp-action="Index">Reservations</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Material Management</h5>
+                <p class="card-text text-muted">Monitor stock, availability, low-stock alerts, and assignments to terrains.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary" asp-controller="Materials" asp-action="Index">Materials</a>
+                    <a class="btn btn-outline-secondary" asp-controller="ReservationMaterials" asp-action="Index">Reservations</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Assignments</h5>
+                <p class="card-text text-muted">Assign materials to terrains and manage terrain-material mappings.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary" asp-controller="TerrainMaterials" asp-action="Index">Terrain Materials</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Current Reservations</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>User</th>
+                                <th>Time</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var reservation in Model.CurrentReservations)
+                        {
+                            <tr>
+                                <td>@reservation.ResourceType - @reservation.ResourceName</td>
+                                <td>@reservation.UserName</td>
+                                <td>@reservation.ReservationDate.ToString("dd/MM/yyyy") @reservation.StartTime:hh\:mm - @(reservation.ReturnTime?.ToString("hh\\:mm") ?? reservation.EndTime.ToString("hh\\:mm"))</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="@reservation.DetailsUrl">Details</a>
+                                    @if (reservation.CanEdit)
+                                    {
+                                        <a class="btn btn-sm btn-outline-secondary" href="@reservation.EditUrl">Edit</a>
+                                    }
+                                    @if (reservation.CanCancel)
+                                    {
+                                        <a class="btn btn-sm btn-outline-danger" href="@reservation.DeleteUrl">Cancel</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming Reservations</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>User</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var reservation in Model.UpcomingReservations)
+                        {
+                            <tr>
+                                <td>@reservation.ResourceType - @reservation.ResourceName</td>
+                                <td>@reservation.UserName</td>
+                                <td>@reservation.ReservationDate.ToString("dd/MM/yyyy")</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="@reservation.DetailsUrl">Details</a>
+                                    @if (reservation.CanChangeAssignedTerrain)
+                                    {
+                                        <span class="badge bg-info">Terrain editable</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-7 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Terrain Availability</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Terrain</th>
+                                <th>Status</th>
+                                <th>Reservations</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var terrain in Model.Terrains)
+                        {
+                            <tr>
+                                <td>@terrain.Type (@terrain.Dimensions)</td>
+                                <td>@terrain.Status</td>
+                                <td>@terrain.ReservationCount</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="@terrain.DetailsUrl">Details</a>
+                                    <a class="btn btn-sm btn-outline-secondary" href="@terrain.EditUrl">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Material Availability</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Material</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var material in Model.Materials)
+                        {
+                            <tr class="@(material.IsLowStock ? "table-warning" : string.Empty)">
+                                <td>@material.Name</td>
+                                <td>@material.Stock</td>
+                                <td>@material.Status</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Low Stock Alerts</h5>
+                @if (!Model.LowStockAlerts.Any())
+                {
+                    <div class="text-muted">No low-stock materials detected.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var material in Model.LowStockAlerts)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>@material.Name</span>
+                                <span class="badge bg-warning text-dark">Stock: @material.Stock</span>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Notifications</h5>
+                @if (!Model.Notifications.Any())
+                {
+                    <div class="text-muted">No notifications to show.</div>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var notification in Model.Notifications)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <strong>@notification.Title</strong>
+                                    <span class="badge bg-secondary">@notification.Severity</span>
+                                </div>
+                                <div>@notification.Message</div>
+                                <small class="text-muted">Source: @notification.Source</small>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

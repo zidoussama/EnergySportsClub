@@ -1,0 +1,241 @@
+﻿@model EnergySportsClub.ViewModels.UserDashboardViewModel
+@{
+    ViewData["Title"] = "Client Dashboard";
+}
+
+<h1 class="page-title">Client Dashboard</h1>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Terrains</div>
+                <h4>@Model.TotalTerrains</h4>
+                <div>@Model.AvailableTerrains available</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Materials</div>
+                <h4>@Model.TotalMaterials</h4>
+                <div>@Model.AvailableMaterials available</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Current Reservations</div>
+                <h4>@Model.CurrentReservationsCount</h4>
+                <div>Active now</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted">Upcoming Reservations</div>
+                <h4>@Model.UpcomingReservationsCount</h4>
+                <div>Scheduled soon</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Browse Terrains</h5>
+                <form method="get" class="row g-2 mb-3">
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" name="terrainSearch" placeholder="Search terrains" />
+                    </div>
+                    <div class="col-md-3 form-check mt-2 ms-2">
+                        <input class="form-check-input" type="checkbox" name="terrainAvailableOnly" value="true" />
+                        <label class="form-check-label">Available only</label>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" type="submit">Search</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Terrain</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var terrain in Model.Terrains)
+                        {
+                            <tr>
+                                <td>@terrain.Type (@terrain.Dimensions)</td>
+                                <td>@terrain.Status</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="@terrain.DetailsUrl">Details</a>
+                                    <a class="btn btn-sm btn-success" href="@terrain.CreateReservationUrl">Reserve</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Browse Materials</h5>
+                <form method="get" class="row g-2 mb-3">
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" name="materialSearch" placeholder="Search materials" />
+                    </div>
+                    <div class="col-md-3 form-check mt-2 ms-2">
+                        <input class="form-check-input" type="checkbox" name="materialAvailableOnly" value="true" />
+                        <label class="form-check-label">Available only</label>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" type="submit">Search</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Material</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var material in Model.Materials)
+                        {
+                            <tr>
+                                <td>@material.Name</td>
+                                <td>@material.Stock</td>
+                                <td>@material.Status</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="@material.DetailsUrl">Details</a>
+                                    <a class="btn btn-sm btn-success" href="@material.CreateReservationUrl">Reserve</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Current Reservations</h5>
+                @foreach (var reservation in Model.CurrentReservations)
+                {
+                    <div class="border-bottom py-2">
+                        <div><strong>@reservation.ResourceType</strong> - @reservation.ResourceName</div>
+                        <div class="text-muted">@reservation.ReservationDate.ToString("dd/MM/yyyy") @reservation.StartTime:hh\:mm</div>
+                        <a href="@reservation.DetailsUrl">View details</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming Reservations</h5>
+                @foreach (var reservation in Model.UpcomingReservations)
+                {
+                    <div class="border-bottom py-2">
+                        <div><strong>@reservation.ResourceType</strong> - @reservation.ResourceName</div>
+                        <div class="text-muted">@reservation.ReservationDate.ToString("dd/MM/yyyy") @reservation.StartTime:hh\:mm</div>
+                        <a href="@reservation.DetailsUrl">View details</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Reservation History</h5>
+                @foreach (var reservation in Model.ReservationHistory)
+                {
+                    <div class="border-bottom py-2">
+                        <div><strong>@reservation.ResourceType</strong> - @reservation.ResourceName</div>
+                        <div class="text-muted">@reservation.ReservationDate.ToString("dd/MM/yyyy")</div>
+                        <a href="@reservation.DetailsUrl">View details</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Notifications</h5>
+                @if (!Model.Notifications.Any())
+                {
+                    <div class="text-muted">No notifications yet.</div>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var notification in Model.Notifications)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <strong>@notification.Title</strong>
+                                    <span class="badge bg-secondary">@notification.Severity</span>
+                                </div>
+                                <div>@notification.Message</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Reservation Calendar</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var reservation in Model.ReservationCalendar)
+                        {
+                            <tr>
+                                <td>@reservation.ResourceType - @reservation.ResourceName</td>
+                                <td>@reservation.ReservationDate.ToString("dd/MM/yyyy")</td>
+                                <td>@reservation.Status</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

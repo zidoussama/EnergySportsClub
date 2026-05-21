@@ -1,0 +1,314 @@
+﻿@model EnergySportsClub.ViewModels.UserDashboardViewModel
+@{
+    ViewData["Title"] = "Client Dashboard";
+}
+
+<div class="hero-panel mb-4">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3">
+        <div>
+            <span class="soft-badge mb-3">Client dashboard</span>
+            <h1 class="display-6 mb-2">Reserve faster, see availability sooner.</h1>
+            <p class="lead mb-0">Browse terrains and materials, then manage your booking history from one streamlined view.</p>
+        </div>
+        <div class="hero-actions">
+            <a class="btn btn-light" asp-controller="ReservationTerrains" asp-action="Index">Terrain bookings</a>
+            <a class="btn btn-outline-light" asp-controller="ReservationMaterials" asp-action="Index">Material bookings</a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card metric-card">
+            <div class="card-body">
+                <div class="metric-label">Terrains</div>
+                <div class="metric-value">@Model.TotalTerrains</div>
+                <div class="text-muted">@Model.AvailableTerrains available</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card">
+            <div class="card-body">
+                <div class="metric-label">Materials</div>
+                <div class="metric-value">@Model.TotalMaterials</div>
+                <div class="text-muted">@Model.AvailableMaterials available</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card">
+            <div class="card-body">
+                <div class="metric-label">Current Reservations</div>
+                <div class="metric-value">@Model.CurrentReservationsCount</div>
+                <div class="text-muted">Active now</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card">
+            <div class="card-body">
+                <div class="metric-label">Upcoming Reservations</div>
+                <div class="metric-value">@Model.UpcomingReservationsCount</div>
+                <div class="text-muted">Scheduled soon</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="section-header">
+                    <div>
+                        <h4>Browse Terrains</h4>
+                        <p class="text-muted">Search and filter terrains before booking.</p>
+                    </div>
+                    <a class="btn btn-outline-primary" asp-controller="ReservationTerrains" asp-action="Index">Open reservations</a>
+                </div>
+                <form method="get" class="row g-2 mb-3">
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" name="terrainSearch" placeholder="Search terrains" />
+                    </div>
+                    <div class="col-md-3 form-check mt-2 ms-2">
+                        <input class="form-check-input" type="checkbox" name="terrainAvailableOnly" value="true" />
+                        <label class="form-check-label">Available only</label>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" type="submit">Search</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Terrain</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var terrain in Model.Terrains)
+                        {
+                            <tr>
+                                <td>@terrain.Type (@terrain.Dimensions)</td>
+                                <td><span class="soft-badge">@terrain.Status</span></td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="@terrain.DetailsUrl">Details</a>
+                                    <a class="btn btn-sm btn-success" href="@terrain.CreateReservationUrl">Reserve</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="section-header">
+                    <div>
+                        <h4>Browse Materials</h4>
+                        <p class="text-muted">Review stock before adding equipment.</p>
+                    </div>
+                    <a class="btn btn-outline-primary" asp-controller="ReservationMaterials" asp-action="Index">Open reservations</a>
+                </div>
+                <form method="get" class="row g-2 mb-3">
+                    <div class="col-md-7">
+                        <input class="form-control" type="text" name="materialSearch" placeholder="Search materials" />
+                    </div>
+                    <div class="col-md-3 form-check mt-2 ms-2">
+                        <input class="form-check-input" type="checkbox" name="materialAvailableOnly" value="true" />
+                        <label class="form-check-label">Available only</label>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" type="submit">Search</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Material</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var material in Model.Materials)
+                        {
+                            <tr>
+                                <td>@material.Name</td>
+                                <td>@material.Stock</td>
+                                <td><span class="soft-badge">@material.Status</span></td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="@material.DetailsUrl">Details</a>
+                                    <a class="btn btn-sm btn-success" href="@material.CreateReservationUrl">Reserve</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="section-header">
+                    <div>
+                        <h4>Current Reservations</h4>
+                        <p class="text-muted">Active bookings right now.</p>
+                    </div>
+                    <span class="soft-badge">@Model.CurrentReservationsCount</span>
+                </div>
+                @if (!Model.CurrentReservations.Any())
+                {
+                    <div class="empty-state">No current reservations.</div>
+                }
+                else
+                {
+                    @foreach (var reservation in Model.CurrentReservations)
+                    {
+                        <div class="border-bottom py-2">
+                            <div><strong>@reservation.ResourceType</strong> - @reservation.ResourceName</div>
+                            <div class="text-muted">@reservation.ReservationDate.ToString("dd/MM/yyyy") @reservation.StartTime:hh\:mm</div>
+                            <a href="@reservation.DetailsUrl">View details</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="section-header">
+                    <div>
+                        <h4>Upcoming Reservations</h4>
+                        <p class="text-muted">Bookings coming soon.</p>
+                    </div>
+                    <span class="soft-badge">@Model.UpcomingReservationsCount</span>
+                </div>
+                @if (!Model.UpcomingReservations.Any())
+                {
+                    <div class="empty-state">No upcoming reservations.</div>
+                }
+                else
+                {
+                    @foreach (var reservation in Model.UpcomingReservations)
+                    {
+                        <div class="border-bottom py-2">
+                            <div><strong>@reservation.ResourceType</strong> - @reservation.ResourceName</div>
+                            <div class="text-muted">@reservation.ReservationDate.ToString("dd/MM/yyyy") @reservation.StartTime:hh\:mm</div>
+                            <a href="@reservation.DetailsUrl">View details</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="section-header">
+                    <div>
+                        <h4>Reservation History</h4>
+                        <p class="text-muted">Past bookings and completed sessions.</p>
+                    </div>
+                    <span class="soft-badge">@Model.ReservationHistoryCount</span>
+                </div>
+                @if (!Model.ReservationHistory.Any())
+                {
+                    <div class="empty-state">No reservation history yet.</div>
+                }
+                else
+                {
+                    @foreach (var reservation in Model.ReservationHistory)
+                    {
+                        <div class="border-bottom py-2">
+                            <div><strong>@reservation.ResourceType</strong> - @reservation.ResourceName</div>
+                            <div class="text-muted">@reservation.ReservationDate.ToString("dd/MM/yyyy")</div>
+                            <a href="@reservation.DetailsUrl">View details</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="section-header">
+                    <div>
+                        <h4>Notifications</h4>
+                        <p class="text-muted">Reservation and availability updates.</p>
+                    </div>
+                </div>
+                @if (!Model.Notifications.Any())
+                {
+                    <div class="empty-state">No notifications yet.</div>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var notification in Model.Notifications)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center gap-2">
+                                    <strong>@notification.Title</strong>
+                                    <span class="badge bg-secondary">@notification.Severity</span>
+                                </div>
+                                <div>@notification.Message</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="section-header">
+                    <div>
+                        <h4>Reservation Calendar</h4>
+                        <p class="text-muted">A quick schedule overview.</p>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var reservation in Model.ReservationCalendar)
+                        {
+                            <tr>
+                                <td>@reservation.ResourceType - @reservation.ResourceName</td>
+                                <td>@reservation.ReservationDate.ToString("dd/MM/yyyy")</td>
+                                <td><span class="soft-badge">@reservation.Status</span></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
